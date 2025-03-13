@@ -14,6 +14,22 @@ adapters = [
     {name = "OneBot V11", module_name = "nonebot.adapters.onebot.v11"},
     # {name = "QQ", module_name = "nonebot.adapters.qq"}
 ]
-plugins = ["nonebot_plugin_status", "nonebot_plugin_analysis_bilibili"]
-plugin_dirs = ["src/plugins"]
-builtin_plugins = []
+plugins = [                             # ------ 社区插件 ------
+    "nonebot_plugin_alconna",           # ALC
+    # supermaster类别
+    "nonebot_plugin_status",            # 服务器状态插件
+    # 非命令信息响应器
+    "nonebot_plugin_analysis_bilibili", # bilibili链接解析
+    "nonebot_plugin_repeater",          # 复读机
+    "nonebot_plugin_deepseek",          # Deekseek ai chat (需配置)
+    # "nonebot_plugin_easymarkdown",    # 转md
+]
+builtin_plugins = [                     # ------ 内置插件 ------
+    "echo"                              # 打印插件
+]
+plugin_dirs = [                         # ------ 个人插件 ------ (拆开方便随时注释禁用)
+    "src/plugins/",
+    # "src/plugins/blocker",            # 拦截
+    # "src/plugins/my_study_plugin",    # debug
+    # "src/plugins/http_forward",
+]
