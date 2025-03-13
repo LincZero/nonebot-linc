@@ -14,6 +14,7 @@ adapters = [
     {name = "OneBot V11", module_name = "nonebot.adapters.onebot.v11"},
     # {name = "QQ", module_name = "nonebot.adapters.qq"}
 ]
+                                        # 优先级：拦截器 > 记录缓存 > 别名/篡改器 > 其他
 plugins = [                             # ------ 社区插件 ------
     "nonebot_plugin_alconna",           # ALC
     # supermaster类别
