@@ -16,6 +16,7 @@ adapters = [
 ]
                                         # 优先级：拦截器 > 记录缓存 > 别名/篡改器 > 其他
 plugins = [                             # ------ 社区插件 ------
+    # "nonebot_plugin_access_control",  # 权限控制(需要指定数据库)
     "nonebot_plugin_alconna",           # ALC
     # supermaster类别
     "nonebot_plugin_status",            # 服务器状态插件
@@ -29,8 +30,7 @@ builtin_plugins = [                     # ------ 内置插件 ------
     "echo"                              # 打印插件
 ]
 plugin_dirs = [                         # ------ 个人插件 ------ (拆开方便随时注释禁用)
-    "src/plugins/",
-    # "src/plugins/blocker",            # 拦截
-    # "src/plugins/my_study_plugin",    # debug
-    # "src/plugins/http_forward",
+    "src/nonebot-plugin-blocker",       # 拦截
+    "src/nonebot-plugin-my-study",      # debug
+    "src/nonebot-plugin-http-forward",
 ]

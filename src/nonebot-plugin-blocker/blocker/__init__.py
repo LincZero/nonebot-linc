@@ -12,26 +12,6 @@ __plugin_meta__ = PluginMetadata(
 
 config = get_plugin_config(Config)
 
-"""
-# 一开始用的stop_propagation方案。缺点：默认优先级好像是1，同优先级无法拦截。社区插件和内置插件基本不可拦截
-# 所以后面弃用了，换用钩子函数进行拦截
-
-from nonebot import get_driver, logger
-from nonebot import on_message
-from nonebot.adapters.onebot.v11 import Bot, MessageEvent
-from nonebot.matcher import Matcher
-
-superusers = set(map(str, get_driver().config.superusers)) # 超级用户列表
-
-m = on_message(priority=1, block=False)
-
-@m.handle()
-async def fn(event: MessageEvent, matcher: Matcher):
-    logger.info(f'superusers:{superusers}, user_id:{event.user_id}, isBlock:{str(event.user_id) not in superusers}') # 03-12 18:41:26 [INFO] blocker | superusers:{'762699299'}, user_id:762699299, ret:True
-    if (str(event.user_id) not in superusers):
-        matcher.stop_propagation()
-"""
-
 from nonebot import get_driver, logger
 from nonebot.exception import IgnoredException
 from nonebot.message import event_preprocessor
@@ -67,4 +47,6 @@ async def group_env(event: GroupMessageEvent, event2: Event, bot: Bot):
         # get_driver().config.deepseek__prompt = f'这是群组"${group_name}"中的提问，请用中文简短回答' # 方法二-2。报错，无法为类型“Config”分配成员“deepseek__prompt”
         # config = get_driver().config; config.deepseek.prompt = f'这是群组"{group_name}"中的提问，请用中文简短回答' # 方法二-3。报错，'dict' object has no attribute 'prompt'
         # event.raw_message = f'prompt: 这是群组"group_name"中的提问，请用中文简短回答\n' + event.raw_message # 方法三。对于我写的其他onebot插件是对的，但对于非onebot会有问题，不通用
-    event.raw_message = event.raw_message + '测试' # 仅对我写的其他onebot插件正确，对其他插件不成功
+    # event.raw_message = event.raw_message + '测试' # 仅对我写的其他onebot插件正确，对其他插件不成功
+    message = event2.get_message()
+    message.__setattr__('message', event.raw_message + '测试2')

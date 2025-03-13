@@ -59,7 +59,7 @@ m = on_message(priority=10, block=False, permission=SUPERUSER)
 
 @m.handle()
 async def _(bot: Bot, event: GroupMessageEvent):
-    if (event.raw_message == '/debug2'):
+    if ('/debug2' in event.raw_message):
         logger.info(f'''
             信息: {event.raw_message}
             发送人id: {event.user_id}
