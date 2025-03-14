@@ -54,8 +54,10 @@ from nonebot_plugin_alconna.uniseg import UniMsg
 async def _(matcher: Matcher, bot: Bot, state: T_State,
     event: Event, event_qq: GroupMessageEvent, msg: UniMsg
 ):  
-    if '/ds' in str(event.get_message()):
-        if hasattr(event, "_is_fake"): return
+    if '/dp' in str(event.get_message()): # 不能用 /ds 开头的内容，不然会重复出现两次相同的事件 (不知道deepseek里面做了什么操作导致会这样)
+        if hasattr(event, "_is_fake"):
+            logger.debug(f'blocker.ds 2, is_fake')
+            return
 
         # 如果是比较慢的模型，可以先回应安抚一下用户
         # await matcher.send('稍等')
@@ -64,15 +66,16 @@ async def _(matcher: Matcher, bot: Bot, state: T_State,
         group_info = await bot.get_group_info(group_id=event_qq.group_id)
         group_name = group_info.get("group_name", "未知群组")
 
-        event.get_message()[0] = str(event.get_message()[0]).replace('/ds', f'/ds 下面是群组"{group_name}"中的提问:\n') # 不生效
-        msg[0] = msg[0].replace("/ds", f'/ds 下面是是群组"{group_name}"中的提问:\n') # 生效
-        event_qq.raw_message = event_qq.raw_message.replace('/ds', f'/ds 下面是是群组"{group_name}"中的提问:\n') # 不生效 (仅于其他onebot插件才生效)
-        # logger.debug(f'''
-        #     blocker.ds
-        #     msg_event: {event.get_message()}
-        #     msg_uni: {msg}
-        #     msg_qq: {event_qq.raw_message}
-        # ''')
+        # 只使用其中一个就可以了
+        # event.get_message()[0] = str(event.get_message()[0]).replace('/ds', f'/ds 下面是群组"{group_name}"中的提问:\n') # 不生效
+        msg[0] = msg[0].replace("/dp", f'/ds 下面是是群组"{group_name}"中的提问:\n') # 生效
+        # event_qq.raw_message = event_qq.raw_message.replace('/ds', f'/ds 下面是是群组"{group_name}"中的提问:\n') # 不生效 (仅于其他onebot插件才生效)
+        logger.debug(f'''
+            blocker.ds
+            msg_event: {event.get_message()}
+            msg_uni: {msg}
+            msg_qq: {event_qq.raw_message}
+        ''')
         fake_event = deepcopy(event)
         setattr(fake_event, "_is_fake", True)
         await handle_event(bot, fake_event) # 修改的是副本，必须拦截并重新抛出事件

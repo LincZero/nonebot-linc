@@ -144,3 +144,9 @@ kill -9 <PID>
 netstat -ano | findstr :8080
 taskkill /F /PID <PID>
 ```
+
+04
+
+.env修改后缓存没变
+
+需要重启整个vscode。缓存是存在vscode里的，而不是项目里
