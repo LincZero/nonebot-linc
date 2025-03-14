@@ -65,7 +65,6 @@ async def _(matcher: Matcher, bot: Bot, state: T_State,
         # 注入群名
         group_info = await bot.get_group_info(group_id=event_qq.group_id)
         group_name = group_info.get("group_name", "未知群组")
-
         # 只使用其中一个就可以了
         # event.get_message()[0] = str(event.get_message()[0]).replace('/ds', f'/ds 下面是群组"{group_name}"中的提问:\n') # 不生效
         msg[0] = msg[0].replace("/dp", f'/ds 下面是是群组"{group_name}"中的提问:\n') # 生效

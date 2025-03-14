@@ -6,9 +6,9 @@ from nonebot.plugin import PluginMetadata   # 插件 - 配置元信息
 from .config import Config
 
 __plugin_meta__ = PluginMetadata(   # 一些注册信息
-    name="my_study_plugin",         # 插件名
+    name="debug_plugin",            # 插件名
     description="",                 # 插件描述
-    usage="",                       # 插件用例
+    usage="/debug+Number",          # 插件用例
     config=Config,
 )
 
