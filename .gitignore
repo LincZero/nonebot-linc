@@ -1,3 +1,4 @@
+.backup*
 env_cqhttp
 env_qqbot
 env_mirai

@@ -52,8 +52,8 @@ async def _(args: Message = CommandArg()):
 # ------------------------ 信息事件型 ----------------------
 
 from nonebot import on_message              # 配置获取
-from nonebot.adapters import Event          # 事件
-from nonebot.adapters.onebot.v11 import Bot, GroupMessageEvent # 群消息
+from nonebot.adapters import Bot, Event     # 事件
+from nonebot.adapters.onebot.v11 import GroupMessageEvent # 群消息
 
 m = on_message(priority=10, block=False, permission=SUPERUSER)
 
@@ -74,12 +74,13 @@ async def _(bot: Bot, event: GroupMessageEvent):
 
 # ------------------------ ALC型 --------------------------
 
-from nonebot import require
-require("nonebot_plugin_alconna")
-
 from nonebot.rule import to_me
 from arclet.alconna import Alconna, Args
+
+from nonebot import require
+require("nonebot_plugin_alconna")
 from nonebot_plugin_alconna import Match, on_alconna
+from nonebot_plugin_alconna.uniseg import UniMsg, At, Reply
 
 weather = on_alconna( # [!code]
     Alconna("/debug3", Args["location?", str]),
@@ -88,7 +89,7 @@ weather = on_alconna( # [!code]
 )
 
 @weather.handle()
-async def handle_function(location: Match[str]):
+async def handle_function(location: Match[str], msg: UniMsg):
     if location.available:
         weather.set_path_arg("location", location.result)
 
@@ -97,3 +98,40 @@ async def got_location(location: str):
     if location not in ["北京", "上海", "广州", "深圳"]:
         await weather.reject(f"你想查询的城市 {location} 暂不支持，请重新输入！")
     await weather.finish(f"今天{location}的天气是...")
+
+# ------------------------ 钩子型 --------------------------
+
+from nonebot.adapters import Bot, Event, MessageSegment
+from nonebot.message import event_preprocessor, run_preprocessor, handle_event
+from nonebot.matcher import Matcher
+from nonebot.adapters import Message
+from nonebot.typing import T_State
+from nonebot.params import CommandArg
+from nonebot.exception import IgnoredException
+from copy import deepcopy
+
+@run_preprocessor
+async def _(matcher: Matcher, bot: Bot, state: T_State,
+    event: Event, event_qq: GroupMessageEvent, msg: UniMsg
+):
+    if '/debug4' in str(event.get_message()):
+        if hasattr(event, "_is_fake"): return
+        logger.info(f'''
+            msg_event: {event.get_message()}
+            msg_qq: {event_qq.raw_message}
+            msg_uni: {msg}
+        ''')
+        # event.__setattr__("message", "new_message_event") # 会有bug，message不是字符串
+        event.get_message()[0] = '/debug3 测试'
+        event_qq.raw_message = "new_message_qq"
+        msg.clear(); msg.append('new_message_uni')
+        logger.info(f'''
+            msg_event2: {event.get_message()}
+            msg_qq2: {event_qq.raw_message}
+            msg_uni2: {msg}
+        ''') 
+
+        fake_event = deepcopy(event)
+        setattr(fake_event, "_is_fake", True)
+        await handle_event(bot, fake_event)
+        raise IgnoredException("some reason")
