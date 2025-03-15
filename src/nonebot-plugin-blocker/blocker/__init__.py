@@ -53,7 +53,7 @@ from nonebot_plugin_alconna.uniseg import UniMsg
 @run_preprocessor
 async def _(matcher: Matcher, bot: Bot, state: T_State,
     event: Event, event_qq: GroupMessageEvent, msg: UniMsg
-):  
+):
     if '/dp' in str(event.get_message()): # 不能用 /ds 开头的内容，不然会重复出现两次相同的事件 (不知道deepseek里面做了什么操作导致会这样)
         if hasattr(event, "_is_fake"):
             logger.debug(f'blocker.ds 2, is_fake')

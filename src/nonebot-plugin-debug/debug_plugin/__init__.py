@@ -7,7 +7,7 @@ from .config import Config
 
 __plugin_meta__ = PluginMetadata(   # 一些注册信息
     name="debug_plugin",            # 插件名
-    description="",                 # 插件描述
+    description="调试打印一些Event和Message等变量", # 插件描述
     usage="/debug+Number",          # 插件用例
     config=Config,
 )
@@ -122,7 +122,7 @@ async def _(matcher: Matcher, bot: Bot, state: T_State,
             msg_uni: {msg}
         ''')
         # event.__setattr__("message", "new_message_event") # 会有bug，message不是字符串
-        event.get_message()[0] = '/debug3 测试'
+        event.get_message()[0] = 'new_message_event'
         event_qq.raw_message = "new_message_qq"
         msg.clear(); msg.append('new_message_uni')
         logger.info(f'''
