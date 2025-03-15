@@ -33,5 +33,5 @@ builtin_plugins = [                     # ------ 内置插件 ------
 plugin_dirs = [                         # ------ 个人插件 ------ (拆开方便随时注释禁用)
     "src/nonebot-plugin-blocker",       # 拦截
     "src/nonebot-plugin-debug",         # debug
-    "src/nonebot-plugin-http-forward",  # 网络转发
+    "src/nonebot-plugin-forward",       # 网络转发
 ]
