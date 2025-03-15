@@ -45,28 +45,42 @@ async def _(matcher: Matcher, bot: Bot, state: T_State,
     logger.debug(f"同步响应: {response.json()}")
     """
     # 这里异步请求到其他服务里
-    if '/fw' in str(event.get_message()) or '/forward' in str(event.get_message()):
+    if '/fw' in str(event.get_message()):
         logger.debug(f'forward: {event.get_message()}')
 
-        if ' -httpbin' in str(event.get_message()) or ' -text' in str(event.get_message()):
+        if '/fw -httpbin' in str(event.get_message()) or ' -text' in str(event.get_message()):
             async with httpx.AsyncClient() as client:
                 response = await client.get("https://httpbin.org/get")
                 logger.debug(f"异步响应: {response.json()}")
                 await matcher.send("已在控制台输出")
 
-        if ' -nf' in str(event.get_message()):
+        if '/fw -nf' in str(event.get_message()):
             async with httpx.AsyncClient() as client:
                 response = await client.get("https://httpbin.org/get")
                 logger.debug(f"异步响应: {response.json()}")
                 await matcher.send("已在控制台输出")
 
-        if ' -ob' in str(event.get_message()):
-            key = get_driver().config.forward['ob_key']
-            logger.debug(f'ob key: {key}')
+    if '/ob' in str(event.get_message()):
+        key = get_driver().config.forward['ob_key']
+        logger.debug(f'ob key: {key}')
 
-            async with httpx.AsyncClient(headers={"Authorization": f"Bearer {key}"}) as client:
-                response = await client.get("https://httpbin.org/get")
-                logger.debug(f"异步响应: {response.json()}")
-                await matcher.send("已在控制台输出")
+        group_info = await bot.get_group_info(group_id=event_qq.group_id)
+        group_name = group_info.get("group_name", event_qq.group_id)
+        group_msg = f"{event_qq.get_user_id()} {event_qq.time}:\n{str(event.get_message()).replace('/ob ', '', 1)}\n"
+
+        async with httpx.AsyncClient(
+            headers={
+                "Authorization": f"Bearer {key}",
+                "Content-Type": "text/markdown",
+                "accept": "*/*",
+            },
+            verify=False  # 关闭 SSL 验证
+        ) as client:
+            # TODO 去掉群名中的非法字符
+            response = await client.post(f"https://127.0.0.1:27124/vault/Chat/{group_name}.md", content=f"{group_msg}\n")
+            if response.status_code == 204:
+                logger.success(f"forward: {group_name}, {response.status_code}")
+            else:
+                logger.error(f"forward: {group_name}, {response.status_code}")
         
         raise IgnoredException("some reason")

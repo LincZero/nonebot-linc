@@ -34,6 +34,7 @@ DRIVER=~fastapi
 SUPERUSERS=["your qq id"]
 deepseek__api_key="sk-xxxxxx"
 deepseek__prompt="用英文回答"
+forward__ob_key="REST API 插件的key"
 ```
 
 ## Usage
