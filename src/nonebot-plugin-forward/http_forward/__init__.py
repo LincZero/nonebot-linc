@@ -77,7 +77,7 @@ async def _(matcher: Matcher, bot: Bot, state: T_State,
             verify=False  # 关闭 SSL 验证
         ) as client:
             # TODO 去掉群名中的非法字符
-            response = await client.post(f"https://127.0.0.1:27124/vault/Chat/{group_name}.md", content=f"{group_msg}\n")
+            response = await client.post(f"https://127.0.0.1:27124/vault/ZChat/{group_name}.md", content=f"{group_msg}\n")
             if response.status_code == 204:
                 logger.success(f"forward: {group_name}, {response.status_code}")
             else:

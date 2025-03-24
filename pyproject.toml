@@ -24,8 +24,8 @@ plugins = [                             # ------ 社区插件 ------
     #"nonebot_plugin_analysis_bilibili", # bilibili链接解析
     #"nonebot_plugin_repeater",          # 复读机
     # "nonebot_plugin_easymarkdown",    # 转md
-    "nonebot_plugin_deepseek"
-    
+    "nonebot_plugin_deepseek",
+    # "nonebot_plugin_ocr"
 ]
 builtin_plugins = [                     # ------ 内置插件 ------
     "echo"                              # 打印插件
